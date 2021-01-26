@@ -35,7 +35,7 @@ AddEventHandler("playerConnecting", OnPlayerConnecting)
 AddEventHandler('onResourceStart', function(resourceName)
     if (GetCurrentResourceName() ~= resourceName) then
         PerformHttpRequest("https://fivem.dk/defender/version", function(err, text, headers)
-            if text == '1.2' then
+            if text == '1.3' then
                 print("[FiveM Defender] The script is up to date")
             else
                 print("\27[31m [FiveM Defender] OUTDATED - Download newest version from: https://github.com/Ezague/FiveM-Defender-Script \27[0m")
@@ -48,8 +48,6 @@ function checkBypass(identifier)
     for k,v in pairs(Config.Bypass) do
         if v == identifier then
             return true
-        else
-            return false
         end
     end
     return false
