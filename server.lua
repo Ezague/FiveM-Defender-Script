@@ -1,21 +1,42 @@
+local cachedLicenses = {}
+
+Citizen.CreateThread(function() 
+    PerformHttpRequest("https://fivem.dk/defender/all", function(statusCode, text, headers)
+        if statusCode == 200 or statusCode == 304 then
+            if text ~= nil and text ~= "" then
+                for i,k in pairs(json.decode(text)) do
+                    for x,b in pairs(k) do
+                        if x == "steam_id" or x == "xbox_id" or x == "live_id" or x == "license_id" or x == "discord_id" then
+                            if b ~= "null" and b ~= nil then
+                                table.insert(cachedLicenses, b)
+                            end
+                        end
+                    end
+                end
+                print("[FiveM Defender] Cache has been loaded.")
+            else
+                print("[FiveM Defender] Failed to load cache.")
+            end
+        else
+            print("[FiveM Defender] Failed to load cache.")
+        end
+    end, 'GET', '')
+end)
+
 local function OnPlayerConnecting(name, setKickReason, deferrals)
     local player = source
     local identifiers = GetPlayerIdentifiers(player)
+    local found          = false
 
-    local steamid  = false
-    local license  = false
-    local discord  = false
-    local xbl      = false
-    local liveid   = false
-    found          = false
     deferrals.defer()
 
     Wait(0)
-    deferrals.update("Finding identifiers...")
+    deferrals.update("[FiveM Defender] Checking identifiers...")
 
-    for k,v in pairs(identifiers)do
-        PerformHttpRequest("https://fivem.dk/defender/single/" .. v, function(err, text, headers)
-            if text == '{"status":"found"}' then
+    for k,v in pairs(identifiers) do
+        print(v)
+        for i,identifier in pairs(cachedLicenses) do
+            if v == identifier then
                 if not checkBypass(v) then
                     found = true
                     print("[FiveM Defender] " .. v .. " excluded due to confirmed modding.")
@@ -23,15 +44,15 @@ local function OnPlayerConnecting(name, setKickReason, deferrals)
                 else
                     print('[FiveM Defender] ' .. v .. ' was a modder, but was allowed access to the server because you set them up in your bypass.')
                 end
+                break;
             end
-        end, 'GET', '')
+        end
     end
     Wait(1000)
     if not found then deferrals.done() end
 end
 
 AddEventHandler("playerConnecting", OnPlayerConnecting)
-
 AddEventHandler('onResourceStart', function(resourceName)
     if (GetCurrentResourceName() ~= resourceName) then
         PerformHttpRequest("https://fivem.dk/defender/version", function(err, text, headers)
