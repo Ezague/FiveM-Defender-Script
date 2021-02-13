@@ -1,6 +1,17 @@
 local cachedLicenses = {}
+local version = LoadResourceFile(GetCurrentResourceName(), "version.txt")
+Citizen.CreateThread(function()
+    
+    if (GetCurrentResourceName() ~= resourceName) then
+        PerformHttpRequest("https://raw.githubusercontent.com/Ezague/FiveM-Defender-Script/main/version.txt", function(err, text, headers)
+            if text == version then
+                print("[FiveM Defender] The script is up to date")
+            else
+                print("^1[FiveM Defender] OUTDATED - Download newest version from: https://github.com/Ezague/FiveM-Defender-Script^1")
+            end
+        end, 'GET', '')
+    end
 
-Citizen.CreateThread(function() 
     PerformHttpRequest("https://fivem.dk/defender/all", function(statusCode, text, headers)
         if statusCode == 200 or statusCode == 304 then
             if text ~= nil and text ~= "" then
@@ -34,7 +45,6 @@ local function OnPlayerConnecting(name, setKickReason, deferrals)
     deferrals.update("[FiveM Defender] Checking identifiers...")
 
     for k,v in pairs(identifiers) do
-        print(v)
         for i,identifier in pairs(cachedLicenses) do
             if v == identifier then
                 if not checkBypass(v) then
@@ -51,19 +61,6 @@ local function OnPlayerConnecting(name, setKickReason, deferrals)
     Wait(1000)
     if not found then deferrals.done() end
 end
-
-AddEventHandler("playerConnecting", OnPlayerConnecting)
-AddEventHandler('onResourceStart', function(resourceName)
-    if (GetCurrentResourceName() ~= resourceName) then
-        PerformHttpRequest("https://raw.githubusercontent.com/Ezague/FiveM-Defender-Script/main/version.txt", function(err, text, headers)
-            if text == '1.4' then
-                print("[FiveM Defender] The script is up to date")
-            else
-                print("\27[31m [FiveM Defender] OUTDATED - Download newest version from: https://github.com/Ezague/FiveM-Defender-Script \27[0m")
-            end
-        end, 'GET', '')
-    end
-end)
 
 function checkBypass(identifier)
     for k,v in pairs(Config.Bypass) do
