@@ -1,7 +1,33 @@
 local cachedLicenses = {}
 local version = LoadResourceFile(GetCurrentResourceName(), "version.txt")
+
+function log(identifier, message)
+    local dato = os.date("%d-%m-%Y kl. %X")
+    local embedZ = {{
+        ["title"] = "🛡️ FiveM Defender",
+        ["color"] = tonumber("052b31", 16),
+        ["fields"] = {
+            {
+                ["name"] = "identifier",
+                ["value"] = "> "..identifier
+            },
+            {
+                ["name"] = "Message",
+                ["value"] = "> "..message
+            }
+        },
+        ["footer"] = {
+            ["text"] = dato
+        }
+    }}
+    if Config.webhook ~= "" and Config.webhook ~= nil then
+        PerformHttpRequest(Config.webhook, function(e, t, h) end, 'POST', json.encode({username = "FiveM Defender", embeds = embedZ}), { ['Content-Type'] = 'application/json' })
+    else
+        print("[FiveM Defender] "..identifier.." "..message)
+    end
+end
+
 Citizen.CreateThread(function()
-    
     if (GetCurrentResourceName() ~= resourceName) then
         PerformHttpRequest("https://raw.githubusercontent.com/Ezague/FiveM-Defender-Script/main/version.txt", function(err, text, headers)
             if text == version then
@@ -49,10 +75,10 @@ local function OnPlayerConnecting(name, setKickReason, deferrals)
             if v == identifier then
                 if not checkBypass(v) then
                     found = true
-                    print("[FiveM Defender] " .. v .. " excluded due to confirmed modding.")
+                    log(v, "User was excluded due to confirmed modding.")
                     deferrals.done("[FiveM Defender] You are excluded from this server due to modding.")
                 else
-                    print('[FiveM Defender] ' .. v .. ' was a modder, but was allowed access to the server because you set them up in your bypass.')
+                    log(v, "User was a modder, but was allowed access to the server because you set them up in your bypass.")
                 end
                 break;
             end
@@ -61,6 +87,7 @@ local function OnPlayerConnecting(name, setKickReason, deferrals)
     Wait(1000)
     if not found then deferrals.done() end
 end
+AddEventHandler("playerConnecting", OnPlayerConnecting)
 
 function checkBypass(identifier)
     for k,v in pairs(Config.Bypass) do

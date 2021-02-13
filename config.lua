@@ -1,5 +1,5 @@
 Config = {}
-
+Config.webhook = ""
 Config.Bypass = {
 
     --"steam:123"
@@ -7,5 +7,5 @@ Config.Bypass = {
     --"xbl:123",
     --"live:123",
     --"discord:123"
-    
+
 }
