@@ -55,7 +55,7 @@ end
 AddEventHandler("playerConnecting", OnPlayerConnecting)
 AddEventHandler('onResourceStart', function(resourceName)
     if (GetCurrentResourceName() ~= resourceName) then
-        PerformHttpRequest("https://fivem.dk/defender/version", function(err, text, headers)
+        PerformHttpRequest("https://raw.githubusercontent.com/Ezague/FiveM-Defender-Script/main/version.txt", function(err, text, headers)
             if text == '1.4' then
                 print("[FiveM Defender] The script is up to date")
             else
