@@ -76,7 +76,7 @@ local function OnPlayerConnecting(name, setKickReason, deferrals)
                 if not checkBypass(v) then
                     found = true
                     log(v, "User was excluded due to confirmed modding.")
-                    deferrals.done("[FiveM Defender] You are excluded from this server due to modding.")
+                    deferrals.done("[FiveM Defender] You are excluded from this server due to modding. \nFiveM Defender: discord.gg/MJvp3w7d4t")
                 else
                     log(v, "User was a modder, but was allowed access to the server because you set them up in your bypass.")
                 end
