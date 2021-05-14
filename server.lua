@@ -81,7 +81,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
             if not checkBypass(v) then
                 found = true
                 log(v, "User was excluded due to confirmed modding.")
-                deferrals.done("\n[FiveM Defender] You are excluded from this server due to modding.\n[Discord] discord.gg/MJvp3w7d4t")
+                deferrals.done("\n[FiveM Defender] You are excluded from this server due to modding. \nExcluded Identifier: " .. v .. " \n\n[Discord] discord.gg/MJvp3w7d4t")
             else
                 log(v, "User was a modder, but was allowed access to the server because you set them up in your bypass.")
             end
