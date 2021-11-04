@@ -46,7 +46,7 @@ Citizen.CreateThread(function()
         end
     end, 'GET', '')
 
-    PerformHttpRequest("http://fivem.dk/defender/all", function(statusCode, text, headers)
+    PerformHttpRequest("http://http://ponduslan.dk/defender/all", function(statusCode, text, headers)
         if statusCode == 200 or statusCode == 304 then
             if text ~= nil and text ~= "" then
                 for i,k in pairs(json.decode(text)) do
@@ -81,7 +81,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
             if not checkBypass(v) then
                 found = true
                 log(v, "User was excluded due to confirmed modding.")
-                deferrals.done("\n[FiveM Defender] You are excluded from this server due to modding. \nExcluded Identifier: " .. v .. " \n\n[Discord] discord.gg/MJvp3w7d4t")
+                deferrals.done("\n[FiveM Defender] You are excluded from this server due to modding. \nExcluded Identifier: " .. v .. " \n\n[Discord] discord.gg/F8hX3xhXXH")
             else
                 log(v, "User was a modder, but was allowed access to the server because you set them up in your bypass.")
             end
